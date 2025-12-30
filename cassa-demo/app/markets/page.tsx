@@ -13,12 +13,13 @@ const CassaProtocol = () => {
   const [swapAmount, setSwapAmount] = useState('');
 
   // Mock historical price data with different patterns
-  const generateHistoricalData = (itStart, utStart, pattern = 'stable') => {
+  const generateHistoricalData = (itStart: number, utStart: number, pattern: string = 'stable') => {
     const data = [];
     const days = 30;
     
     for (let i = 0; i < days; i++) {
-      let itPrice, utPrice;
+      let itPrice: number = 0;  // ← AGGIUNGI QUESTO
+      let utPrice: number = 0;  // ← AGGIUNGI QUESTO
       const progress = i / days;
       
       if (pattern === 'stable') {
@@ -46,16 +47,16 @@ const CassaProtocol = () => {
   };
 
   // Calculate theoretical redemption price based on current conditions
-  const calculateRedemptionPrice = (policy) => {
+  const calculateRedemptionPrice = (policy: any) => {
     // Mock current oracle values
-    const mockOracle = {
-      1: { value: 0.998, itRedemption: 0.002 }, // USDC at 0.998
-      2: { value: 0, itRedemption: 0 }, // No exploit
-      3: { value: 14.2, itRedemption: 0.053 }, // Yield at 14.2% vs 15% benchmark
-      4: { value: 0, itRedemption: 0 } // Expired
+    const mockOracle: Record<number, { value: number; itRedemption: number }> = {
+        1: { value: 0.998, itRedemption: 0.002 },
+        2: { value: 0, itRedemption: 0 },
+        3: { value: 14.2, itRedemption: 0.053 },
+        4: { value: 0, itRedemption: 0 }
     };
-    
-    const oracle = mockOracle[policy.id];
+
+    const oracle = mockOracle[policy.id] || { value: 0, itRedemption: 0 };
     const itRedemption = oracle.itRedemption;
     const utRedemption = 1 - itRedemption;
     
@@ -255,7 +256,7 @@ const CassaProtocol = () => {
     return 'px-2 sm:px-3 py-1 bg-gray-400 text-white text-xs font-medium rounded-full';
   };
 
-  const PolicyCard = ({ policy }) => {
+  const PolicyCard = ({ policy }: { policy: any }) => {
     const Icon = policy.icon;
     return (
       <div
@@ -301,7 +302,7 @@ const CassaProtocol = () => {
     );
   };
 
-  const PolicyModal = ({ policy, onClose }) => {
+  const PolicyModal = ({ policy, onClose }: { policy: any; onClose: () => void }) => {
     if (!policy) return null;
 
     const isExpired = policy.status === 'Expired';
