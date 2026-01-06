@@ -90,6 +90,11 @@ const CassaProtocol = () => {
         name: 'LlamaRisk',
         address: '0x1234...5678'
       },
+      utBreakdown: {
+        tradingFees: '3.8%',
+        underlyingYield: '5.2%',
+        policyPremiums: '3.4%'
+      },
       historicalData: generateHistoricalData(0.023, 0.977, 'stable'),
       details: {
         effectiveDate: '2025-12-01',
@@ -118,6 +123,11 @@ const CassaProtocol = () => {
       curator: {
         name: 'Euler Risk DAO',
         address: '0xabcd...ef01'
+      },
+      utBreakdown: {
+        tradingFees: '4.5%',
+        underlyingYield: '9.8%',
+        policyPremiums: '3.9%'
       },
       historicalData: generateHistoricalData(0.045, 0.955, 'volatile'),
       details: {
@@ -176,6 +186,11 @@ const CassaProtocol = () => {
       curator: {
         name: 'Chaos Labs',
         address: '0x5555...9999'
+      },
+      utBreakdown: {
+        tradingFees: '4.2%',
+        underlyingYield: '8.1%',
+        policyPremiums: '3.5%'
       },
       finalSettlement: {
         itRedemption: '0.00 USDC',
@@ -444,7 +459,57 @@ const CassaProtocol = () => {
                 </div>
               </div>
             )}
+            {/* IT Coverage Economics */}
+            {!isExpired && (
+              <div>
+                <h3 className="text-sm font-semibold text-gray-600 uppercase mb-3">IT Coverage Economics</h3>
+                <div className="bg-blue-50 border border-blue-300 rounded-lg p-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-700">Cost per $100k coverage</span>
+                      <span className="text-lg font-bold text-blue-600">
+                        ${(parseFloat(policy.itPrice) * 100000).toFixed(0)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-700">Max Leverage</span>
+                      <span className="text-lg font-bold text-blue-600">
+                        {(1 / parseFloat(policy.itPrice)).toFixed(0)}x
+                      </span>
+                    </div>
+                    <div className="pt-3 border-t border-blue-200">
+                      <p className="text-xs text-gray-700 mb-1">Example:</p>
+                      <p className="text-sm font-semibold text-gray-900">
+                        $5,000 → ${((5000 / parseFloat(policy.itPrice)) / 1000000).toFixed(2)}M coverage
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
+            {/* UT Return Breakdown */}
+            {!isExpired && policy.apy !== '-' && policy.utBreakdown && (
+              <div>
+                <h3 className="text-sm font-semibold text-gray-600 uppercase mb-3">UT Return Breakdown ({policy.apy} APY)</h3>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-700">📊 Trading Fees (AMM LPs)</span>
+                      <span className="text-sm font-semibold text-gray-900">{policy.utBreakdown.tradingFees}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-700">💰 Underlying Yield ({policy.underlying})</span>
+                      <span className="text-sm font-semibold text-gray-900">{policy.utBreakdown.underlyingYield}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-700">🔒 Policy Premiums</span>
+                      <span className="text-sm font-semibold text-gray-900">{policy.utBreakdown.policyPremiums}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             {/* Settlement Function */}
             <div>
               <h3 className="text-sm font-semibold text-gray-600 uppercase mb-2">Settlement Function</h3>
